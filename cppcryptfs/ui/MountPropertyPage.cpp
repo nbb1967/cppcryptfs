@@ -532,10 +532,17 @@ BOOL CMountPropertyPage::OnInitDialog()
 	if (!IsValidMountPointColumnWidth(mountPointColumnWidth)) {
 		mountPointColumnWidth = 79;
 	}
+	
+	CRect rect;
+	pList->GetClientRect(&rect);
+	int scrollWidth = ::GetSystemMetrics(SM_CXVSCROLL);
+	int totalAvailableWidth = rect.Width() - scrollWidth;
 
 	pList->InsertColumn(DL_INDEX, LocUtils::GetStringFromResources(IDS_COLUMN_HEADER_MOUNT_POINT).c_str(), LVCFMT_LEFT, mountPointColumnWidth);
 
-	pList->InsertColumn(PATH_INDEX, LocUtils::GetStringFromResources(IDS_COLUMN_HEADER_PATH).c_str(), LVCFMT_LEFT, 454-mountPointColumnWidth);
+	pList->InsertColumn(PATH_INDEX, LocUtils::GetStringFromResources(IDS_COLUMN_HEADER_PATH).c_str(), LVCFMT_LEFT, totalAvailableWidth - mountPointColumnWidth);
+	
+	pList->SetExtendedStyle(pList->GetExtendedStyle() | LVS_EX_LABELTIP);
 
 	CString lastMountPoint = theApp.GetProfileString(L"MountPoints", L"LastMountPoint", L"");
 
